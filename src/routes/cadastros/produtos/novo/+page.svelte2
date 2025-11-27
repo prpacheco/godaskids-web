@@ -1,0 +1,98 @@
+<script>
+  let descricao = "";
+  let categoria = "";
+  let faixa = "";
+  let tamanho = "";
+  let preco = "";
+
+  const tamanhosInfantil = ["1", "2", "4", "6", "8", "10", "12", "14"];
+  const tamanhosAdulto = ["P", "M", "G", "GG"];
+
+  let tamanhosFiltrados = [];
+
+  // Atualiza o combo conforme faixa
+  function atualizarTamanhos() {
+    if (faixa === "INFANTIL") {
+      tamanhosFiltrados = tamanhosInfantil;
+    } else if (faixa === "ADULTO") {
+      tamanhosFiltrados = tamanhosAdulto;
+    } else {
+      tamanhosFiltrados = [];
+    }
+
+    tamanho = ""; // limpa seleção atual
+  }
+
+  let mensagem = "";
+  async function salvarProduto() {
+    const resp = await fetch("http://localhost:8080/produtos/salvar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        descricao,
+        categoria,
+        faixa,
+        tamanho,
+        preco
+      })
+    });
+
+    mensagem = await resp.text();
+  }
+
+</script>
+
+<div class="page-container">
+  <div class="card">
+    <form class="form">
+        {#if mensagem}
+            <div class="msg-sucesso">{mensagem}</div>
+        {/if}
+      <h1>Cadastrar Produto</h1>
+
+      <div class="grid">
+
+        <div class="campo">
+          <label for="descricao">Descrição</label>
+          <input id="descricao" bind:value={descricao} />
+        </div>
+
+        <div class="campo">
+          <label for="categoria">Categoria</label>
+          <select id="categoria" bind:value={categoria}>
+            <option value="">Selecione...</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMININO">Feminino</option>
+            <option value="UNISSEX">Unissex</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="faixa">Faixa</label>
+          <select id="faixa" bind:value={faixa} on:change={atualizarTamanhos}>
+            <option value="">Selecione...</option>
+            <option value="INFANTIL">Infantil</option>
+            <option value="ADULTO">Adulto</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="tamanho">Tamanho</label>
+          <select id="tamanho" bind:value={tamanho} disabled={tamanhosFiltrados.length === 0}>
+            <option value="">Selecione...</option>
+            {#each tamanhosFiltrados as t}
+              <option>{t}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
+
+      <div class="botoes">
+        <button class="btn azul" on:click|preventDefault={salvarProduto}>Salvar</button>
+        <button class="btn cinza" on:click|preventDefault={limpar}>Limpar</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
