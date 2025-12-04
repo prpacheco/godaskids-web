@@ -43,6 +43,10 @@
         ? "http://localhost:8080/produtos/salvar"
         : "http://localhost:8080/produtos/editar/" + id;
 
+        const precoBigDecimal = preco
+          .replace(/\D/g, "")      // tira tudo que não é número
+          .replace(/(\d{2})$/, ".$1"); // insere ponto antes dos centavos
+
     const resp = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -52,7 +56,7 @@
         categoria,
         faixa,
         tamanho,
-        preco
+        preco: precoBigDecimal
       })
     });
 
