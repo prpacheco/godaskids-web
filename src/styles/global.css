@@ -210,6 +210,11 @@ select {
   color: white;
 }
 
+.btn.vermelho {
+  background: #e74c3c;
+  color: white;
+}
+
 /* mensagens */
 .msg-sucesso {
   background: #d4f8d4;

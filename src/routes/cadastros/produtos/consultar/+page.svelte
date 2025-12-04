@@ -53,7 +53,7 @@
     import { goto } from "$app/navigation";
 
       function irParaEdicao(id) {
-        goto('/cadastros/produtos/editar/${id}');
+        goto(`/cadastros/produtos/editar/${id}`);
       }
 
 </script>
@@ -115,6 +115,7 @@
     <table>
       <thead>
         <tr>
+          <th>Código</th>
           <th>Descrição</th>
           <th>Categoria</th>
           <th>Faixa</th>
@@ -125,6 +126,7 @@
       <tbody>
         {#each produtos as p}
         <tr on:click={() => irParaEdicao(p.id)} class="linha-click">
+          <td>{p.id}</td>
           <td>{p.descricao}</td>
           <td>{p.categoria}</td>
           <td>{p.faixa}</td>

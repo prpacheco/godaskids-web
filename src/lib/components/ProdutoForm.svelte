@@ -9,6 +9,16 @@
   let tamanho = produto.tamanho ?? "";
   let preco = produto.preco ?? "";
 
+  $: if (produto) {
+    id = produto.id;
+    descricao = produto.descricao ?? "";
+    categoria = produto.categoria ?? "";
+    faixa = produto.faixa ?? "";
+    tamanho = produto.tamanho ?? "";
+    preco = produto.preco ?? "";
+    atualizarTamanhos(); // preenche ao carregar a edição
+  }
+
   const tamanhosInfantil = ["1", "2", "4", "6", "8", "10", "12", "14"];
   const tamanhosAdulto = ["P", "M", "G", "GG"];
 
@@ -24,8 +34,6 @@
 
     if (!tamanhosFiltrados.includes(tamanho)) tamanho = "";
   }
-
-  $: atualizarTamanhos(); // preenche ao carregar a edição
 
   let mensagem = "";
 
@@ -60,6 +68,27 @@
 
     mensagem = "Produto removido!";
   }
+
+  function mascaraPreco(e) {
+    let valor = e.target.value;
+
+    // tira tudo que não for número
+    valor = valor.replace(/\D/g, "");
+
+    // transforma em centavos
+    valor = (Number(valor) / 100).toFixed(2);
+
+    // formata no padrão BR
+    valor = valor
+      .toString()
+      .replace(".", ",")
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    e.target.value = "R$ " + valor;
+
+    preco = e.target.value; 
+  }
+
 </script>
 
 <div class="page-container">
@@ -107,8 +136,20 @@
                   {/each}
                 </select>
               </div>
-            </div>
+              
+              <div class="campo">
+  <label for="preco">Preço</label>
+  <input
+    id="preco"
+    bind:value={preco}
+    on:input={mascaraPreco}
+    placeholder="R$ 0,00"
+  />
+</div>
 
+
+
+            </div>
       <div class="botoes">
         <button class="btn azul" on:click|preventDefault={salvar}>
           {modo === "novo" ? "Salvar" : "Atualizar"}
